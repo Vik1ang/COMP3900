@@ -1,0 +1,37 @@
+Week1
+Having a meeting on teams, discussing and choosing the project, then assign each part of project to team members.
+I was assigned to frontend part of this project.
+
+Week2
+Discussing the User Stories, design the UI and interaction of the frontend.
+
+Week3
+Add Login and register page of frontend
+Add background of these pages
+
+Week4
+Add following new features of register page:
+Nickname, BOD and Gender
+Finished the Proposal
+
+Week5
+Demo A, then got the feedback from tutor.
+After Demo A, doing the register verify by sending verify email.
+
+Week6
+flexible week
+Added new features to register page.
+Finished the problem of CORS
+
+Week7
+Added new components log out
+Finished the UI of email verify
+
+Week8
+Demo B, then got the feedback from tutor.
+Finished the following components:
+edit profile, update password.
+
+Week9
+Finished the following components:
+Add Comments, Show Comments, Show My Recipe.

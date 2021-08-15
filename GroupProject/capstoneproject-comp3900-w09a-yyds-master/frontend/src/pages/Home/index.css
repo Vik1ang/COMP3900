@@ -1,0 +1,70 @@
+.upload{
+    position: fixed;
+    z-index: 999;
+    top: 100px;
+    left: 50px;
+    color: rgb(240, 28, 222);
+    font-size: 35px;
+}
+.logo {
+  float: left;
+  font-size: 30px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+.dropdown{
+    font-size: 16px;
+    margin-right: 30px;
+}
+.rec{
+    position: relative;
+    overflow: hidden;
+    height: 500px;
+    text-align: center;
+}
+.deco{
+    position: absolute;
+    padding: 10px;
+    width: 220px;
+    height: 220px;
+    left: 50%;
+    top: 50%;
+    margin-left: -110px;
+    margin-top: -110px;
+    background-color: rgba(100, 100, 100, 0.5);
+}
+.deco p{
+    font-size: 16px;
+}
+.gomore{
+    font-size: 16px;
+    color: #000;
+    font-weight: bold;
+    text-decoration: underline!important;
+}
+.dinnerList{
+    display: flex;
+    flex-wrap: wrap;
+    height: 446px;
+    overflow: auto;
+    justify-content: space-between;
+}
+.dinnerList .ope,.foodlist .ope{
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+.foodlist{
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+}
+/* .foodlist::after {
+    content: '';
+    flex: auto;   
+} */
+.subtitle{
+    text-align: center;
+    margin: 20px auto;
+}

@@ -1,0 +1,19 @@
+Week1: We creat a team and have a talk with each other, decide which farmerwork are we gona use, and also  generally assign tasks.
+
+Week2: I was wrok on react and coding about 5 conponments, like navigation, search, footer and so on, but it is the innitial version. 
+
+Week3: I have createt Login, and initial  Home pages, also meeting to talk abot proposal， have meeting and assign tasks， My job is to hand graph the story board.
+
+Week4: We finished the proposal, also I integrated my code and XIAO HU's code, optimized the style, improved part of the login and registration functions, and carried out front-end docking.
+
+Week5: Feels not goot use at mtertial-ui, for my part, change to us antd-Design to created components, and start to design Home pages, confirm layout create a list-show components to show the lsit in home pages.
+
+week6: mid-break
+
+week7:  After   demo A, have meeting and  taking the tut advices which is the E-mail verification functionalitity, and have a initial version
+
+week8:  Do Demo B, meeting several time , finished Home pages and rating and like function, also finished RestrospectiveA, busy week! 
+
+Week9: Submit RestrospectiveA, Almost finished all pages, meeting and group to connect home Login, change password API
+
+Week10:   meeting to assign report work,  coding last version, keep improving ,pack project.

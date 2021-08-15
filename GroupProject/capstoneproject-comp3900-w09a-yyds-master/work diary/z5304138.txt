@@ -1,0 +1,26 @@
+Week 1
+Group formed. Decided with the team the project we will be doing and dicussed with the team the software tools and libraries we can use for the project.
+
+Week 2
+Had a meeting with the team to discuss the details about our project proposal. I wrote a draft backend code for the user registration. Additionlly, I implemented a method for users to change their password.
+
+Week 3
+Had a team meeting and distrubuted workload for the proposal. I wrote some of the the acceptance criteria for the user stories in the proposal.
+
+Week 4
+Had a meeting with the team to finalize the proposal and disscuss about the demo. I helped proof read the proposal
+
+Week 5
+Had a demo with the tutor and the team; the team then had a meeting after the demo to discuss the approaches to tutor's suggestions and advice
+
+Week 6
+Had a meeting with the team to reflect on our past sprint and wrote our Retrospective Report; I added the sendEmail feature to the backend which allows the users to verify their emails
+
+Week 7
+I wrote implemetations for features such as like recipe, unlike recipe, and comment recipe; Had a meeting with a team and assigned new tasks; I later wrote more methods for the user stories that I was assigned to
+
+Week 8
+The team held a meeting during the lab session after we have demonstrated our project to our tutor; we held a meeting later that week to disccuss and replect on our last sprint; impmented more features for the user story
+
+Week 9
+Worked on improving our user interface for our project as well as adding new features to the app; wrote the funtionalies and the background pasrt of the project report

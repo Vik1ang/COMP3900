@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yyds.recipe.mapper.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.yyds.recipe.model.User">
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="first_name" property="firstName" jdbcType="VARCHAR"/>
+        <result column="last_name" property="lastName" jdbcType="VARCHAR"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="birthdate" property="birthdate" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="profile_photo" property="profilePhoto" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <insert id="saveUser" parameterType="com.yyds.recipe.model.User">
+        insert into recipe.user(user_id, email, first_name, last_name, nick_name, birthdate, gender,
+                                create_time)
+        values (#{userId}, #{email}, #{firstName}, #{lastName}, #{nickName}, #{birthdate}, #{gender}, #{createTime});
+    </insert>
+
+    <insert id="saveUserAccount" parameterType="com.yyds.recipe.model.User">
+        insert into recipe.account(user_id, password)
+        values (#{userId}, #{password})
+    </insert>
+
+    <update id="editUser" parameterType="com.yyds.recipe.model.User">
+        update recipe.user
+        <set>
+            <if test="firstName != null">
+                first_name=#{firstName},
+            </if>
+            <if test="lastName != null">
+                last_name=#{lastName},
+            </if>
+            <if test="nickName != null">
+                nick_name=#{nickName},
+            </if>
+            <if test="birthdate != null">
+                birthdate=#{birthdate},
+            </if>
+            <if test="gender">
+                gender=#{gender},
+            </if>
+            <if test="profilePhoto != null">
+                profile_photo=#{profilePhoto}
+            </if>
+        </set>
+        <where>
+            user_id=#{userId}
+        </where>
+    </update>
+
+
+    <select id="getUserByEmail" parameterType="java.lang.String" resultMap="UserResultMap">
+        select u.user_id,
+               u.email,
+               u.first_name,
+               u.last_name,
+               u.nick_name,
+               ua.password,
+               u.birthdate,
+               u.gender,
+               u.contact,
+               u.address,
+               u.create_time,
+               u.profile_photo
+        from recipe.user u
+                 left join recipe.account ua on u.user_id = ua.user_id
+        where u.email = #{email};
+    </select>
+
+    <select id="getUserByUserId" parameterType="java.lang.String" resultMap="UserResultMap">
+        select u.user_id,
+               u.email,
+               u.first_name,
+               u.last_name,
+               u.nick_name,
+               ua.password,
+               u.birthdate,
+               u.gender,
+               u.contact,
+               u.address,
+               u.create_time,
+               u.profile_photo
+        from recipe.user u
+                 left join recipe.account ua on u.user_id = ua.user_id
+        where u.user_id = #{userId}
+    </select>
+
+    <insert id="followUser">
+        insert into recipe.follow(following_user_id, follow_user_id)
+        values (#{followingId}, #{followId});
+    </insert>
+
+    <delete id="unfollowUser">
+        delete
+        from recipe.follow
+        where following_user_id = #{followingId}
+          and follow_user_id = #{followId}
+    </delete>
+
+    <select id="getFollowing" parameterType="java.lang.String" resultMap="UserResultMap">
+        select ru.user_id,
+        ru.email,
+        ru.first_name,
+        ru.last_name,
+        ru.nick_name,
+        ru.birthdate,
+        ru.gender,
+        ru.contact,
+        ru.address,
+        ru.create_time,
+        ru.profile_photo
+        from recipe.follow rf
+        left join recipe.user ru on ru.user_id = rf.follow_user_id
+        where rf.following_user_id = #{userId}
+        <if test="search != null">
+            and ru.nick_name like concat('%', #{search,jdbcType=VARCHAR}, '%')
+        </if>
+    </select>
+
+    <select id="getFollower" parameterType="java.lang.String" resultMap="UserResultMap">
+        select ru.user_id,
+        ru.email,
+        ru.first_name,
+        ru.last_name,
+        ru.nick_name,
+        ru.birthdate,
+        ru.gender,
+        ru.contact,
+        ru.address,
+        ru.create_time,
+        ru.profile_photo
+        from recipe.follow rf
+        left join recipe.user ru on ru.user_id = rf.following_user_id
+        where rf.follow_user_id = #{userId}
+        <if test="search != null">
+            and ru.nick_name like concat('%', #{search,jdbcType=VARCHAR}, '%')
+        </if>
+    </select>
+
+</mapper>

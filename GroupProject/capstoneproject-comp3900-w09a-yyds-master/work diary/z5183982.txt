@@ -1,0 +1,71 @@
+Week 1
+
+1. Formed Group
+
+2. elect the Scrum master
+
+3. choose project --- recipe
+
+Week 2
+
+1. Divided to frontend and backend
+
+2. Meeting for proposal and I write a system design and architecture
+
+3. Implement user story
+
+Week 3
+
+1. create Database
+
+2. finish proposal
+
+3. backend API confirmed
+
+Week 4
+
+1. User service
+
+Week 5
+
+1. Prepare for DemoA
+
+2. Backend add email verify after DemoA tutor told we need verify email
+
+Week 6
+
+1. Reflect our past sprint and plan what's next plan
+
+2. Finish RetrospectiveA
+
+Week 7
+
+1. Start Recipe Service
+
+2. Use Aliyun Mysql instead of local Database
+
+3. Use Aliyun ECS and set up redis server
+
+Week 8
+
+1. Connecting with Backend
+
+2. Debug the error in the backend
+
+3. Design the authentication and authorization for the user
+
+Week 9
+
+1. Implement photo and video upload and download
+
+2. Using OSS server to store
+
+3. Start Project Report
+
+4. Find Mysql Cloud speed is slow in Sydney and replace it to AWS RDS
+
+Week 10
+
+1. Improve the remaining functions
+
+2. Prepare presentation

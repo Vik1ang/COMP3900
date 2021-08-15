@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yyds.recipe.mapper.TagMapper">
+
+    <select id="getTagsList" resultType="java.lang.String">
+        select t.name
+        from recipe.tag_list t;
+    </select>
+
+    <insert id="addTagsList" parameterType="java.lang.String">
+        insert into recipe.tag_list(name)
+        values
+        <foreach collection="list" item="tag" separator=",">
+            (#{tag,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+</mapper>

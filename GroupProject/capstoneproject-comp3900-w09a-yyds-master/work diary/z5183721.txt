@@ -1,0 +1,36 @@
+week1
+Decide with the team on the project we will do, and discuss with the team the software tools and libraries that we can use for the project.
+week2
+Meet with the team to discuss details about our project proposal.
+design the database E-R diagram.
+complete edit profile controller.
+complete edit user service.
+week4
+A team meeting was held and proposal's workload was allocated. I completed part of the user stories and novel functionalit in the proposal.
+week5
+ Meet with the team and show DomA with the tutor
+ use postman to test the function is work and report to frontend.
+ use swagger to test the function parameter is work.
+week6
+ Add a Recipe Class.
+ complete postRecipe.
+ use postman to test the function is work and report to leader.
+week7
+ Meet with the team to discuss and complete the project functionality.
+ complete the subscribe.
+ complete the cancelSubscribe.
+ complete the setPrivacy
+ complete the getAllPublicRecipe
+week8
+ Meet with the team to discuss and complete the project functionality.
+ use postman to test the function is work and report to leader.
+ complete deleteRecipe
+ fix comment bug
+ fix deleteComment bug
+ rewrite the function and sql
+week9
+ Meet with the team to complete the project.
+ fix the bugs in frontend and backend.
+ wrote part of the funtionalies and Data Layer.
+ check the function is being used and work.
+ 

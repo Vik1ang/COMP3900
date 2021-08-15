@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yyds.recipe.mapper.RecipeMapper">
+
+    <resultMap id="RecipeResultMap" type="com.yyds.recipe.model.Recipe">
+        <result column="recipe_id" property="recipeId" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
+        <result column="ingredients" property="ingredients" jdbcType="VARCHAR"/>
+        <result column="method" property="method" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="time_duration" property="timeDuration" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="is_privacy" property="isPrivacy" jdbcType="INTEGER"/>
+        <result column="is_rated" property="isRated" jdbcType="INTEGER"/>
+        <result column="is_liked" property="isLiked" jdbcType="INTEGER"/>
+        <result column="likes" property="likes" jdbcType="INTEGER"/>
+        <result column="rateScore" property="rateScore" jdbcType="DOUBLE"/>
+        <result column="myRateScore" property="myRateScore" jdbcType="DOUBLE"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <collection column="recipe_id" property="comments" ofType="com.yyds.recipe.model.Comment"
+                    javaType="java.util.ArrayList" select="com.yyds.recipe.mapper.RecipeMapper.getCommentsByRecipeId">
+        </collection>
+    </resultMap>
+
+    <select id="getCommentsByRecipeId" resultMap="CommentResultMap">
+        select rc.comment_id,
+               rc.recipe_id,
+               rc.comment,
+               rc.comment_user_id,
+               rc.create_time,
+               rc.update_time,
+               u.nick_name,
+               u.profile_photo
+        from recipe.comment rc
+                 left join recipe.user u on u.user_id = rc.comment_user_id
+        where rc.recipe_id = #{recipeId}
+        order by str_to_date(rc.create_time, 'yyyy-MM-dd HH:mm:ss')
+    </select>
+
+    <resultMap id="CommentResultMap" type="com.yyds.recipe.model.Comment">
+        <result column="comment_id" property="commentId" jdbcType="VARCHAR"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="recipe_id" property="recipeId" jdbcType="VARCHAR"/>
+        <result column="comment" property="content" jdbcType="VARCHAR"/>
+        <result column="comment_user_id" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR"/>
+        <result column="profile_photo" property="profilePhoto" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="saveRecipe" parameterType="com.yyds.recipe.model.Recipe">
+        insert into recipe.recipe(recipe_id,
+                                  title,
+                                  introduction,
+                                  ingredients,
+                                  method,
+                                  create_time,
+                                  time_duration,
+                                  user_id)
+        values (#{recipeId}, #{title}, #{introduction}, #{ingredients}, #{method}, #{createTime}, #{timeDuration},
+                #{userId})
+    </insert>
+
+    <insert id="savePhotos">
+        insert into recipe.photo(recipe_id, file_name)
+        values
+        <foreach collection="uploadPhotos" item="photo" separator=",">
+            (#{recipeId,jdbcType=VARCHAR},#{photo, jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <insert id="likeRecipe">
+        insert into recipe.like(recipe_id, user_id)
+        values (#{recipeId}, #{userId})
+    </insert>
+
+    <delete id="unlikeRecipe">
+        delete
+        from recipe.like
+        where user_id = #{userId}
+          and recipe_id = #{recipeId}
+
+    </delete>
+
+    <select id="getRecipeById" parameterType="java.lang.String" resultMap="RecipeResultMap">
+        select r.recipe_id,
+               r.title,
+               r.introduction,
+               r.ingredients,
+               r.method,
+               r.create_time,
+               r.time_duration,
+               r.user_id,
+               r.is_privacy
+        from recipe.recipe r
+        where recipe_id = #{recipeId}
+    </select>
+
+    <update id="updatePrivacy">
+        update recipe.recipe
+        <set>
+            is_privacy = #{isPrivacy}
+        </set>
+        where recipe_id = #{recipeId}
+    </update>
+
+    <select id="getRecipeList" resultMap="RecipeResultMap">
+        select r.recipe_id,
+        r.title,
+        r.introduction,
+        r.ingredients,
+        r.method,
+        r.create_time,
+        r.time_duration,
+        r.user_id,
+        r.is_privacy,
+        ru.nick_name,
+        ifnull((select count(1)
+        from recipe.rate
+        where rate.recipe_id = r.recipe_id
+        and rate.user_id = #{userId}), 1) is_rated,
+        ifnull((select count(1)
+        from recipe.like rl
+        where rl.recipe_id = r.recipe_id
+        and rl.user_id = #{userId}), 1) is_liked,
+        (select count(1) from recipe.like rl1 where rl1.recipe_id = r.recipe_id) likes,
+        ifnull((select avg(rr1.rate) from recipe.rate rr1 where rr1.recipe_id = r.recipe_id), 0) rateScore,
+        (select rr2.rate from recipe.rate rr2 where rr2.recipe_id=r.recipe_id and rr2.user_id = #{userId}) myRateScore
+        from recipe.recipe r
+        left join recipe.like l on r.recipe_id = l.recipe_id
+        left join recipe.tag_recipe tr on tr.recipe_id = r.recipe_id
+        left join recipe.rate rr on rr.recipe_id = r.recipe_id
+        left join recipe.user ru on r.user_id = ru.user_id
+        <where>
+            r.is_privacy = 0
+            <if test="tagList != null">
+                and tr.tag_name in
+                <foreach collection="tagList" item="tagName" open="(" close=")" separator=",">
+                    #{tagName}
+                </foreach>
+            </if>
+            <if test="searchContent != null">
+                and (r.title like concat('%', #{searchContent,jdbcType=VARCHAR}, '%') or r.introduction like concat('%',
+                #{searchContent,jdbcType=VARCHAR}, '%') or r.ingredients like concat('%',
+                #{searchContent,jdbcType=VARCHAR}, '%') or r.method like concat('%', #{searchContent,jdbcType=VARCHAR},
+                '%'))
+            </if>
+            <if test="creatorId != null">
+                and r.user_id = #{creatorId, jdbcType=VARCHAR}
+            </if>
+            <if test="recipeId != null">
+                and r.recipe_id = #{recipeId, jdbcType=VARCHAR}
+            </if>
+            <if test="isLiked != null">
+                and (select count(1)
+                from recipe.like rl
+                where rl.recipe_id = r.recipe_id
+                and rl.user_id = #{userId}) > 0
+            </if>
+        </where>
+        group by r.recipe_id
+    </select>
+
+    <select id="getMyRecipeList" resultMap="RecipeResultMap">
+        select r.recipe_id,
+               r.title,
+               r.introduction,
+               r.ingredients,
+               r.method,
+               r.create_time,
+               r.time_duration,
+               r.user_id,
+               r.is_privacy,
+               count(1) likes
+        from recipe.recipe r
+                 left join recipe.like l on r.recipe_id = l.recipe_id
+        where r.user_id = #{userId}
+        group by r.recipe_id
+    </select>
+
+    <select id="getFileNameListByRecipeId" resultType="java.lang.String">
+        select file_name
+        from recipe.photo
+        where recipe_id = #{recipeId}
+    </select>
+
+    <insert id="saveTagRecipe">
+        insert into tag_recipe(recipe_id, tag_name)
+        values
+        <foreach collection="tags" item="tagName" separator=",">
+            (#{recipeId,jdbcType=VARCHAR}, #{tagName, jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <select id="getTagListByRecipeId" parameterType="java.lang.String" resultType="java.lang.String">
+        select tl.name
+        from recipe.tag_recipe tr
+                 left join recipe.tag_list tl on tr.tag_name = tl.name
+        where tr.recipe_id = #{recipeId}
+    </select>
+
+    <select id="getCountBySpecificRate" resultType="java.lang.Integer">
+        select count(1) from recipe.rate
+        <where>
+            recipe_id = #{recipeId} and user_id = #{userId}
+        </where>
+    </select>
+
+    <insert id="rateRecipe">
+        insert into recipe.rate(recipe_id, user_id, rate)
+        values (#{recipeId}, #{userId}, #{rate})
+    </insert>
+
+    <update id="updateRate">
+        update recipe.rate
+        <set>
+            rate = #{rate}
+        </set>
+        <where>
+            recipe_id = #{recipeId} and user_id = #{userId}
+        </where>
+    </update>
+
+    <insert id="postComment" parameterType="com.yyds.recipe.model.Comment">
+        insert into comment(comment_id, recipe_id, comment, comment_user_id, create_time, update_time)
+        values (#{commentId}, #{recipeId}, #{content}, #{creatorId}, #{createTime}, #{updateTime})
+    </insert>
+
+    <select id="getComments" resultMap="CommentResultMap">
+        select c.comment_id, u.nick_name, c.recipe_id, c.comment, c.comment_user_id, c.create_time, c.update_time,
+        u.profile_photo
+        from comment c
+        left join user u on c.comment_user_id = u.user_id
+        <where>
+            <if test="commentId != null">
+                c.comment_id = #{commentId}
+            </if>
+        </where>
+        order by str_to_date(c.create_time, 'yyyy-MM-dd HH:mm:ss')
+    </select>
+
+    <delete id="deleteComment" parameterType="com.yyds.recipe.model.Comment">
+        delete
+        from recipe.comment c
+        where c.comment_id = #{commentId}
+    </delete>
+
+    <insert id="saveVideos">
+        insert into recipe.video(recipe_id, file_name)
+        values
+        <foreach collection="uploadVideos" item="video" separator=",">
+            (#{recipeId,jdbcType=VARCHAR},#{video, jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRecipe" parameterType="com.yyds.recipe.model.Recipe">
+        delete
+        from recipe.recipe rr
+        where rr.recipe_id = #{recipeId}
+    </delete>
+
+    <delete id="deletePhotoByRecipeId" parameterType="com.yyds.recipe.model.Recipe">
+        delete
+        from recipe.photo rp
+        where rp.recipe_id = #{recipeId}
+    </delete>
+
+    <delete id="deleteVideoByRecipeId" parameterType="com.yyds.recipe.model.Recipe">
+        delete
+        from recipe.video rv
+        where rv.recipe_id = #{recipeId}
+    </delete>
+
+    <update id="updateRecipe" parameterType="com.yyds.recipe.model.Recipe">
+        update recipe.recipe
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction},
+            </if>
+            <if test="ingredients != null">
+                ingredients = #{ingredients},
+            </if>
+            <if test="method != null">
+                method = #{method},
+            </if>
+            <if test="timeDuration != null">
+                time_duration = ${timeDuration}
+            </if>
+        </set>
+        <where>
+            recipe_id = #{recipeId}
+        </where>
+    </update>
+
+    <delete id="deleteTagsByRecipe" parameterType="com.yyds.recipe.model.Recipe">
+        delete
+        from recipe.tag_recipe rtc
+        where rtc.recipe_id = #{recipeId}
+    </delete>
+
+    <select id="getVisitorRecipeList" resultMap="RecipeResultMap">
+        select r.recipe_id,
+        r.title,
+        r.introduction,
+        r.ingredients,
+        r.method,
+        r.create_time,
+        r.time_duration,
+        r.user_id,
+        r.is_privacy,
+        (select count(1) from recipe.like rl1 where rl1.recipe_id = r.recipe_id) likes,
+        ifnull((select avg(rr1.rate) from recipe.rate rr1 where rr1.recipe_id = r.recipe_id), 0) rateScore
+        from recipe.recipe r
+        left join recipe.like l on r.recipe_id = l.recipe_id
+        left join recipe.tag_recipe tr on tr.recipe_id = r.recipe_id
+        left join recipe.rate rr on rr.recipe_id = r.recipe_id
+        <where>
+            r.is_privacy = 0
+            <if test="creatorId != null">
+                and r.user_id = #{creatorId, jdbcType=VARCHAR}
+            </if>
+            <if test="recipeId != null">
+                and r.recipe_id = #{recipeId, jdbcType=VARCHAR}
+            </if>
+        </where>
+        group by r.recipe_id;
+    </select>
+
+    <select id="getVideoFileList" resultType="java.lang.String">
+        select file_name
+        from recipe.video
+        where recipe_id = #{recipeId}
+    </select>
+
+</mapper>
