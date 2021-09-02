@@ -7,7 +7,7 @@ spring:
   datasource:
     url: jdbc:mysql://rm-wz98eu202hx5fv84gzo.mysql.rds.aliyuncs.com:3306/recipe
     username: root
-    password: qXd8b#5Y%!e2P4PcMR9zPj5XPA**
+    password: 123
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     # Druid
@@ -50,7 +50,7 @@ spring:
   mail:
     host: smtp.163.com
     username: kkkk2077@163.com
-    password: SEZZOMBFXMJQJSTA
+    password: 123
     port: 587
     protocol: smtp
     properties.mail.display.sendmail: Springboot
