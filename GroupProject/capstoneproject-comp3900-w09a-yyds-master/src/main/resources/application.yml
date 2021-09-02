@@ -118,6 +118,6 @@ management:
 aliyun:
   oss:
     bucketName: comp3900-w18a-yyds
-    accessKeyId: LTAI5tMGGufMdDKS2SiyQXdJ
-    accessKeySecret: B3FaLdpLAQFFZ9gaWqyCFgaNdA6JtR
+    accessKeyId: 123
+    accessKeySecret: 123
     endpoint: oss-accelerate.aliyuncs.com
